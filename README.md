@@ -1,1 +1,1 @@
-Repository of NMP-related material produced by mmlab at AUEB.
+Repository of NMP-related material produced by members of the Mobile Multimedia Laboratory (MMlab) at AUEB.
