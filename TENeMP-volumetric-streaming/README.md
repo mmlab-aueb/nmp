@@ -2,7 +2,7 @@
 
 The project include the CPP source code of the consumer and producer applications for the volumetric streaming application that were developed during the TENEMP project [1]. 
 
-Detailed description of the applications can be found in [3].
+Detailed description of the applications can be found in [2].
 
 
 ## Compile and run
@@ -12,14 +12,14 @@ To run the applications, the node running the producer application should be equ
 
 
 #### consumer.CPP
-Dependencies: draco CPP library[5], glfw [6], GL [7] 
+Dependencies: draco CPP library[4], glfw [5], GL [6] 
 
 Command for building and executing (from the root directory):
 ```console
 $ reset && CAPP2=consumer;  g++ ${CAPP2}.CPP -o $CAPP2 -lrealsense2 -lglfw -lGL -lGLU -ldraco -lpthread  -g  && ./${CAPP2} 
 ```
 #### producer.CPP 
-Dependencies: draco CPP library [5], intel realsense CPP library [8], jpeg [10]
+Dependencies: draco CPP library [4], intel realsense CPP library [7], jpeg [9]
 
 Command for building and executing (from the root directory):
 ```console
@@ -66,10 +66,10 @@ The following parameters are available for the consumer application:
 
 
 ## Output/Logs
-Details on the output or logs of the applications is available in [4].
+Details on the output or logs of the applications is available in [2].
  
 ## Parsers
-Four parsers are included in directory ./parsers. The parsers can be applied to log files like the ones available at [4]. Similar files can be created by simply directing the output of the applications to a file during application execuring (using the ">" symbol). E.g., the following command compiles and executes the consumer app sending output to file "myfile"
+Four parsers are included in directory ./parsers. The parsers can be applied to log files like the ones available at [3]. Similar files can be created by simply directing the output of the applications to a file during application execuring (using the ">" symbol). E.g., the following command compiles and executes the consumer app sending output to file "myfile"
 ```console
 $ reset && CAPP2=consumer;  g++ ${CAPP2}.CPP -o $CAPP2 -lglfw -lGL -lGLU -ldraco  -g  && ./${CAPP2} > myfile 
 ```
@@ -99,11 +99,11 @@ Some portions of the code are derived from third-party software licensed under t
 ## References
 
 1. TENEMP Project site, https://mmlab-aueb.github.io/tenemp-site/
-3. Thomas, Y. and Xylomenos, G., "Ultra-low Latency Point Cloud Streaming in 5G", submitted for publication, 2025
-4. DataSet repository
-5. Google Draco encoder, https://github.com/google/draco
-6. glfw, https://github.com/glfw/glfw
-7. openGL, http://www.opengl.org/
-8. Intel realsense SDK, https://github.com/IntelRealSense/librealsense
-9. AFF3CT: A Fast Forward Error Correction Toolbox!, https://github.com/aff3ct/aff3ct
-10. jpg CPP library, https://www.ijg.org/files/
+2. Thomas, Y. and Xylomenos, G., "Ultra-low Latency Point Cloud Streaming in 5G", submitted for publication, 2025
+3. DataSet repository -- To be announced
+4. Google Draco encoder, https://github.com/google/draco
+5. glfw, https://github.com/glfw/glfw
+6. openGL, http://www.opengl.org/
+7. Intel realsense SDK, https://github.com/IntelRealSense/librealsense
+8. AFF3CT: A Fast Forward Error Correction Toolbox!, https://github.com/aff3ct/aff3ct
+0. jpg CPP library, https://www.ijg.org/files/
