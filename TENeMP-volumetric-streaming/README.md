@@ -99,7 +99,6 @@ Some portions of the code are derived from third-party software licensed under t
 ## References
 
 1. TENEMP Project site, https://mmlab-aueb.github.io/tenemp-site/
-2. Volumetric streaming application repository: 
 3. Thomas, Y. and Xylomenos, G., "Ultra-low Latency Point Cloud Streaming in 5G", submitted for publication, 2025
 4. DataSet repository
 5. Google Draco encoder, https://github.com/google/draco
