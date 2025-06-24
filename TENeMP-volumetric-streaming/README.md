@@ -29,9 +29,9 @@ $ reset && CAPP=producer_multithreaded;  g++ ${CAPP}.CPP -o $CAPP -lrealsense2 -
 
 #### producer application parameters
 The following parameters are available for the producer application: 
-*ENABLE_HOLE_PUNCHING 1 //0 true, 1 false
-*ENABLE_SFU 1 //0 true, 1 false
-*ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds.
+* ENABLE_HOLE_PUNCHING 1 //0 true, 1 false
+* ENABLE_SFU 1 //0 true, 1 false
+* ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds.
 *COLOR_MODE: <unsigned> 0 for sending RGB for each point, 1 for sending color frame and textures; the latter is still under development
 *ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
 *ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
