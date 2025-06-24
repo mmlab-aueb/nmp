@@ -1,0 +1,9 @@
+This project incorporates code originally licensed under the Apache License 2.0:
+
+- Files: extra/rs_extra/*
+- Original Author: Intel Corporation 
+- URL: https://github.com/IntelRealSense/librealsense
+
+Licensed under the Apache License, Version 2.0 (see LICENSE-APACHE for details).
+
+Modifications made by mmlab-AUEB, 2025.
