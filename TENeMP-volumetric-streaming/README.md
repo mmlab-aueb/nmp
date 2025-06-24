@@ -15,8 +15,9 @@ To run the applications, the node running the producer application should be equ
 Dependencies: draco CPP library[5], glfw [6], GL [7] 
 
 Command for building and executing (from the root directory):
+```console
 $ reset && CAPP2=consumer;  g++ ${CAPP2}.CPP -o $CAPP2 -lrealsense2 -lglfw -lGL -lGLU -ldraco -lpthread  -g  && ./${CAPP2} 
-
+```
 #### producer.CPP 
 Dependencies: draco CPP library [5], intel realsense CPP library [8], jpeg [10]
 
