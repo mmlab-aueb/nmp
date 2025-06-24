@@ -32,37 +32,37 @@ The following parameters are available for the producer application:
 * ENABLE_HOLE_PUNCHING 1 //0 true, 1 false
 * ENABLE_SFU 1 //0 true, 1 false
 * ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds.
-*COLOR_MODE: <unsigned> 0 for sending RGB for each point, 1 for sending color frame and textures; the latter is still under development
-*ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
-*ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
-*ENABLE_FEC: <boolean> Enables FEC supported by affect library [9] -- currently under development.
-*STOP_AT: <unsigned> Stops application after sending N packets; can be omitted to run forever
-*DROP_POINTS_RATE: <unsigned> Drops 1 of N points in a point cloud, e.g., 2 results in 50% reduction, 4 results in 25% reduction and so on. 
-*EXCLUDE_A_COLOUR: <boolead> Ignored the transparency byte in RGB -- obsolete
-*DRACO_COMPRESSION_LEVEL: <unsigned> The compression level of draco encoder
-*QUANTIZATION_BITS: <unsigned> The quantization bits of draco encoder
-*HOLE_PUNCHING_SIGN_SRV: <unsigned> The IPv4 address for communicating with the UDP hole punching server, the SFU or MCU.
-*HOLE_PUNCHER_PORT: <unsigned> The port for communicating with the UDP hole punching server, the SFU or MCU.
-*CONSUMER_IP: <unsigned> The IPv4 address for sending packets from the consumer app.
-*CONSUMER_PORT: <unsigned> The port for sending packets from the consumer app.
-*NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression
-*CHUNK_SIZE: <unsigned> The size of chunks that will be transmitted over UDP
+* COLOR_MODE: <unsigned> 0 for sending RGB for each point, 1 for sending color frame and textures; the latter is still under development
+* ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
+* ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
+* ENABLE_FEC: <boolean> Enables FEC supported by affect library [9] -- currently under development.
+* STOP_AT: <unsigned> Stops application after sending N packets; can be omitted to run forever
+* DROP_POINTS_RATE: <unsigned> Drops 1 of N points in a point cloud, e.g., 2 results in 50% reduction, 4 results in 25% reduction and so on. 
+* EXCLUDE_A_COLOUR: <boolead> Ignored the transparency byte in RGB -- obsolete
+* DRACO_COMPRESSION_LEVEL: <unsigned> The compression level of draco encoder
+* QUANTIZATION_BITS: <unsigned> The quantization bits of draco encoder
+* HOLE_PUNCHING_SIGN_SRV: <unsigned> The IPv4 address for communicating with the UDP hole punching server, the SFU or MCU.
+* HOLE_PUNCHER_PORT: <unsigned> The port for communicating with the UDP hole punching server, the SFU or MCU.
+* CONSUMER_IP: <unsigned> The IPv4 address for sending packets from the consumer app.
+* CONSUMER_PORT: <unsigned> The port for sending packets from the consumer app.
+* NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression
+* CHUNK_SIZE: <unsigned> The size of chunks that will be transmitted over UDP
 
 
 
 #### consumer application parameters
 The following parameters are available for the consumer application: 
-*ENABLE_HOLE_PUNCHING: <boolean> Enables the mediation of a UDP hole punching server. Feature is tested but not documented.
-*ENABLE_SFU: <boolean> Enables the mediation of a UDP hole punching server. Feature is tested but not documented.
-*ENABLE_UI: <boolean> Enables the openGL window for rendering the 3D point clouds to the nodes screen.
-*ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds. Must be same with producer
-*ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
-*ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
-*ENABLE_FEC: <boolean> Enables FEC supported by affect library [9] -- currently under development.
-*HOLE_PUNCHING_SIGN_SRV: <String> The IPv4 address for communicating with the UDP hole punching server, the SFU or MCU.
-*HOLE_PUNCHER_PORT: <unsigned> The port for communicating with the UDP hole punching server, the SFU or MCU.
-*LISTENING_PORT: <unsigned> The port for receiving packets from the producer app.
-*NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression. Must be same with consumer app
+* ENABLE_HOLE_PUNCHING: <boolean> Enables the mediation of a UDP hole punching server. Feature is tested but not documented.
+* ENABLE_SFU: <boolean> Enables the mediation of a UDP hole punching server. Feature is tested but not documented.
+* ENABLE_UI: <boolean> Enables the openGL window for rendering the 3D point clouds to the nodes screen.
+* ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds. Must be same with producer
+* ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
+* ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
+* ENABLE_FEC: <boolean> Enables FEC supported by affect library [9] -- currently under development.
+* HOLE_PUNCHING_SIGN_SRV: <String> The IPv4 address for communicating with the UDP hole punching server, the SFU or MCU.
+* HOLE_PUNCHER_PORT: <unsigned> The port for communicating with the UDP hole punching server, the SFU or MCU.
+* LISTENING_PORT: <unsigned> The port for receiving packets from the producer app.
+* NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression. Must be same with consumer app
 
 
 ## Output/Logs
@@ -98,13 +98,13 @@ Some portions of the code are derived from third-party software licensed under t
 
 ## References
 
-[1] TENEMP Project site, https://mmlab-aueb.github.io/tenemp-site/
-[2] Volumetric streaming application repository: 
-[3] Thomas, Y. and Xylomenos, G., "Ultra-low Latency Point Cloud Streaming in 5G", submitted for publication, 2025
-[4] DataSet repository
-[5] Google Draco encoder, https://github.com/google/draco
-[6] glfw, https://github.com/glfw/glfw
-[7] openGL, http://www.opengl.org/
-[8] Intel realsense SDK, https://github.com/IntelRealSense/librealsense
-[9] AFF3CT: A Fast Forward Error Correction Toolbox!, https://github.com/aff3ct/aff3ct
-[10] jpg CPP library, https://www.ijg.org/files/
+1. TENEMP Project site, https://mmlab-aueb.github.io/tenemp-site/
+2. Volumetric streaming application repository: 
+3. Thomas, Y. and Xylomenos, G., "Ultra-low Latency Point Cloud Streaming in 5G", submitted for publication, 2025
+4. DataSet repository
+5. Google Draco encoder, https://github.com/google/draco
+6. glfw, https://github.com/glfw/glfw
+7. openGL, http://www.opengl.org/
+8. Intel realsense SDK, https://github.com/IntelRealSense/librealsense
+9. AFF3CT: A Fast Forward Error Correction Toolbox!, https://github.com/aff3ct/aff3ct
+10. jpg CPP library, https://www.ijg.org/files/
