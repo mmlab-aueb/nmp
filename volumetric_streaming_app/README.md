@@ -100,7 +100,7 @@ Some portions of the code are derived from third-party software licensed under t
 
 1. TENEMP Project site, https://mmlab-aueb.github.io/tenemp-site/
 2. Thomas, Y. and Xylomenos, G., "Ultra-low Latency Point Cloud Streaming in 5G", submitted for publication, 2025
-3. DataSet repository -- To be announced
+3. DataSet DOI: 10.5281/zenodo.15736910
 4. Google Draco encoder, https://github.com/google/draco
 5. glfw, https://github.com/glfw/glfw
 6. openGL, http://www.opengl.org/
