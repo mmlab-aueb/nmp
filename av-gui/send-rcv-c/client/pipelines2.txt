@@ -1,0 +1,2 @@
+# Bidirectional pipeline
+webrtcbin name=webrtcbin videotestsrc pattern=ball ! tee name=t ! queue ! videoconvert ! xvimagesink name=remote_view t. ! queue ! videoconvert ! vp8enc deadline=1000000 ! rtpvp8pay ! queue ! application/x-rtp,media=video,encoding-name=VP8,payload=96 ! webrtcbin. webrtcbin. ! application/x-rtp,media=video,encoding-name=VP8,payload=96 ! rtpvp8depay ! vp8dec ! videoconvert ! autovideosink name=remote_preview
