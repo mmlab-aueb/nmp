@@ -1,0 +1,2 @@
+# Bidirectional pipeline
+webrtcbin name=webrtcbin v4l2src device=/dev/video0 ! tee name=t ! queue ! videoconvert ! xvimagesink t. ! queue ! videoconvert ! vp8enc deadline=1000000 ! rtpvp8pay ! queue ! application/x-rtp,media=video,encoding-name=VP8,payload=96 ! webrtcbin
