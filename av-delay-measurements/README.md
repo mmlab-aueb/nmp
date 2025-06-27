@@ -35,7 +35,7 @@ Where SERVER_IP is the actual public IP of your server.
 #### Client-SFU architecture
 ##### Audio
 
-In this mode, the *udp_audio_relay_server.py* acts as a udp AUDIO relay server and must run on a machine with a public IP and open UDP ports 10000, 10001, 20000, 20001
+In this mode, the *udp_audio_relay_server.py* script acts as a udp AUDIO relay server and must run on a machine with a public IP and open UDP ports 10000, 10001, 20000, 20001
 
 First run the relay server:
 
@@ -53,7 +53,7 @@ After that UDP hole punching will take place and bidirectional audio communicati
 
 ##### Video
 
-The *udp_audio_relay_server.py* acts as a udp VIDEO relay server and must run on a machine with a public IP and open UDP ports 10000, 10001, 20000, 20001
+The *udp_video_relay_server.py* script acts as a udp VIDEO relay server and must run on a machine with a public IP and open UDP ports 10000, 10001, 20000, 20001
 
 First run the relay server:
 
