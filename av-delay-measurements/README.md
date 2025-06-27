@@ -11,8 +11,10 @@ First run the signaling server script at a machine with public IP.
 
 Then at the first peer, behind NAT run
 > python p2p_signaling_client_hole_punch.py --server-ip SERVERS_IP --local-port 5000 --peer-number 1
+
 Where SERVERS_IP is the actual public IP of your server.
 
 And at the second peer behind NAT run
 > python p2p_signaling_client_hole_punch.py --server-ip SERVERS_IP --local-port 5000 --peer-number 2
+
 Where SERVERS_IP is the actual public IP of your server.
