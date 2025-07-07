@@ -99,7 +99,7 @@ Some portions of the code are derived from third-party software licensed under t
 ## References
 
 1. TENEMP Project site, https://mmlab-aueb.github.io/tenemp-site/
-2. Thomas, Y. and Xylomenos, G., "---", submitted for publication under double blind peer reviewing process, 2025
+2. Thomas, Y. and Xylomenos, G., "Accept Ultra-low Latency Point Cloud Streaming in 5G", EuroXR International Conference, 2025
 3. DataSet DOI: 10.5281/zenodo.15736910
 4. Google Draco encoder, https://github.com/google/draco
 5. glfw, https://github.com/glfw/glfw
