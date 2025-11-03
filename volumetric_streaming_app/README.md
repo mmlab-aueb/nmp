@@ -89,7 +89,7 @@ The following parameters are available for the consumer application:
 ## Output/Logs
 Details on the output or logs of the applications is available in [2].
  
-## Parsers (may require modifications for latest versions)
+## Parsers (absolete)
 Four parsers are included in directory ./parsers. The parsers can be applied to log files like the ones available at [3]. Similar files can be created by simply directing the output of the applications to a file during application execuring (using the ">" symbol). E.g., the following command compiles and executes the consumer app sending output to file "myfile"
 ```console
 $ reset && CAPP=consumer;  g++ ${CAPP}.CPP -o $CAPP -lglfw -lGL -lGLU -ldraco  -g  && ./${CAPP} > myfile 
