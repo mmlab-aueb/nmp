@@ -22,8 +22,9 @@
 //
 // For full license terms, see the LICENSE (GPLv3) and LICENSE-APACHE files
 // included with this source distribution.
+
 /**
- * compile/execute command: reset && CAPP=producer_multithreaded;  g++ ${CAPP}.cpp -o $CAPP -lrealsense2 -lglfw -lGL -lGLU -ldraco -ljpeg -lpthread -g  && ./${CAPP} > /tmp/producer_$(date +%F-%T)
+ * compile/execute command: reset && CAPP=producer;  g++ ${CAPP}.cpp -o $CAPP -lrealsense2 -lglfw -lGL -lGLU -ldraco -ljpeg -lpthread -g  && ./${CAPP} > /tmp/producer_$(date +%F-%T)
  * Results are stored in "/tmp/producer_$(date +%F-%T)"
  * 
  * to include FEC add -I/usr/local/include/aff3ct-3.0.2-152-g60b147a/aff3ct/ -I/usr/local/include/aff3ct-3.0.2-152-g60b147a/cli/ -I/usr/local/include/aff3ct-3.0.2-152-g60b147a/streampu -I/usr/local/include/aff3ct-3.0.2-152-g60b147a/rang -I/usr/local/include/aff3ct-3.0.2-152-g60b147a/MIPP -laff3ct-3.0.2-152-g60b147a 
@@ -54,31 +55,42 @@
 #include <cstdarg>
 #include <jpeglib.h>
 
-#define ENABLE_HOLE_PUNCHING 1 //0 true, 1 false
-#define ENABLE_SFU 1 //0 true, 1 false
+unsigned char MYSOURCEID = 0; //serial number of sender, must be in range [0, NUM_OF_STREAMS) ; NUM_OF_STREAMS is defined at receiver 
+
+#define ENABLE_HOLE_PUNCHING 0 //0 true, 1 false
+#define ENABLE_SFU 0 //0 true, 1 false WORKS ONLY WITH "ENABLE_HOLE_PUNCHING == 0"
 
 #define ENABLE_FRAME_HASHING 0 //0 true, 1 false 
 #define ENABLE_DETAILED_TIMING 0 //0 true, 1 false
 
 #define ENABLE_BnW 1 //0 true, 1 false 
-#define COLOR_MODE 0 //0 for sending RGB for each point, 1 for sending color frame and textures
+#define COLOR_MODE 0 //0 for sending RGB for each point, 1 for sending color frame and textures (impl of "1" is not complete)
 
 #define ENABLE_FEC 1 //0 true, 1 false 
-#define STOP_AT 500 //exit after sending N packets
+//#define STOP_AT 1000 //exit after sending N packets
 #define DROP_POINTS_RATE 2 //Drops 1 of N points
 #define EXCLUDE_A_COLOUR 1 //0 true, 1 false
-int DRACO_COMPRESSION_LEVEL = 4;//I think 1 is the fastest, 9 reduces size the most
+int DRACO_COMPRESSION_LEVEL = 8;//I think 1 is the fastest, 9 reduces size the most
 int QUANTIZATION_BITS = 16; //16 is default
-unsigned NUM_OF_ENCODING_THREADS = 4;
+unsigned NUM_OF_ENCODING_THREADS = 8;
+
+//#define WRITE_JPG_TO_FILE 0 //0 for true, 1 for false //for debugging purposes
+
+uint8_t PAYLOAD_TYPE = 0; //0 for point cloud, other for other..
+
+#define SLOW_PACE 1 //0 will add 1 second latency among PC captures (for dev/debugging purposes), 1 will not be enabled
+#define REGULATE_BURSTS 0 //0 for true, 1 for false 
 
 #if ENABLE_FEC == 0
 	#include "/usr/local/include/aff3ct-3.0.2-152-g60b147a/aff3ct/aff3ct.hpp"
 #endif
 
-std::string HOLE_PUNCHING_SIGN_SRV =  "195.251.234.16";
-std::string CONSUMER_IP =  "192.168.1.210";
+std::string HOLE_PUNCHING_SIGN_SRV =  "192.168.1.241";
+std::string CONSUMER_IP =  "192.168.1.162";
 unsigned HOLE_PUNCHER_PORT = 8888;
-unsigned CONSUMER_PORT = 5555;
+unsigned CONSUMER_PORT = 5001;
+
+unsigned CHUNK_SIZE = 1450;
 
 sockaddr_in consumerAddress; //address received by UHP server
 sockaddr_in UHPAddress;
@@ -118,11 +130,12 @@ void print_config(){
 	printf("STOP_AT_%u ", STOP_AT);
 	#endif
 
+	//printf("HOLE_PUNCHING_SIGN_SRV %s ", HOLE_PUNCHING_SIGN_SRV);
 	printf("DRACO_COMPRESSION_LEVEL_%u ", DRACO_COMPRESSION_LEVEL);
 	printf("QUANTIZATION_BITS_%u ", QUANTIZATION_BITS);
 	printf("NUM_OF_ENCODING_THREADS_%u ", NUM_OF_ENCODING_THREADS);
 	printf("\n");
-	}
+}
 	
 //variables for inter-thread communication
 std::vector<void*>  v_to_senderThread;
@@ -136,57 +149,74 @@ pthread_cond_t c_to_senderThread = PTHREAD_COND_INITIALIZER;
 void *sendingThread(void* ){
 	int clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
 
-	int chunkId;
+	unsigned chunkId;
 	unsigned frameId=0;
 	while (true){
 		std::string log="";
 	    MessageToThread* msg = (MessageToThread*)readMessageFromThread(v_to_senderThread, m_to_senderThread, c_to_senderThread);
-	    void * bufferToSend = (void*) msg->buffer; //thats the pointcloud
+	    void * bufferToSend = (void*) msg->buffer; //thats our pointcloud
 	    unsigned bufferToSend_len = msg->bufferSize;
 		
 		auto start = std::chrono::system_clock::now();
 		/// send buffer to remote musician
-		unsigned CHUNK_SIZE = 1400;	
-		unsigned index = 0;
+		unsigned write_offset = 0;
+		unsigned write_offset_pre = 0;
 	#if ENABLE_SFU == 0	
-		///add pre-header for SFU: <TYPE><sockaddr_in><Payload>
-		char* chunkToSend = (char*)malloc(sizeof(char)/*type*/+ sizeof(sockaddr_in)+ sizeof(frameId)+sizeof(chunkId)+CHUNK_SIZE);	
+		///add pre-header for SFU: <TYPE><sockaddr_in><PAYLOAD>
+		///PAYLOAD format is [<source id, 1byte>, <frame id, 4bytes>, <chunk id, 4bytes>, <PAYLOAD_TYPE, 1 byte>, <1400bytes content>]
 		char type = 5;
-		memcpy(chunkToSend+index, &type, sizeof(char));	index+=sizeof(char);
-		memcpy(chunkToSend+index, &consumerAddress, sizeof(sockaddr_in)); index+=sizeof(sockaddr_in);
+		char* chunkToSend = (char*)malloc(sizeof(type) + sizeof(sockaddr_in)+ sizeof(MYSOURCEID)+sizeof(frameId)+sizeof(chunkId)+sizeof(PAYLOAD_TYPE)+CHUNK_SIZE);	
+		memcpy(chunkToSend, &type, sizeof(type));	
+		write_offset_pre  += sizeof(type);
+		memcpy(chunkToSend+write_offset_pre, &consumerAddress, sizeof(consumerAddress)); 
+		write_offset_pre+=sizeof(consumerAddress);
 
 		char ip[INET_ADDRSTRLEN];
 		inet_ntop (AF_INET, &(consumerAddress.sin_addr), ip, sizeof (ip));
 		uint16_t port = htons (consumerAddress.sin_port);
-		printf ("Request to forward to consumer IP %s:%d (SFU header size: %d)\n", ip, port, index);
+		printf ("T2 Request to forward to consumer IP %s:%d (SFU header size: %d)\n", ip, port, sizeof(ip));
 	#else
-		char* chunkToSend = (char*)malloc(sizeof(frameId)+sizeof(chunkId)+CHUNK_SIZE);	
+		char* chunkToSend = (char*)malloc(sizeof(MYSOURCEID)+sizeof(frameId)+sizeof(chunkId)+sizeof(PAYLOAD_TYPE)+CHUNK_SIZE);	
 	#endif
 		/** Toy transmission protocol: [<frame id, 4bytes>, <chunk id, 4bytes>, <1400bytes content>] */
 		////fragment buffer localy and send data -- not required, but usefull for transisioning to UDP
+		//write sourceId
+		memcpy(chunkToSend+write_offset_pre, &MYSOURCEID, sizeof(MYSOURCEID));
+		write_offset_pre += sizeof(MYSOURCEID);
 		//write frameId
-		memcpy(chunkToSend+index, &frameId, sizeof(frameId));
+		memcpy(chunkToSend+write_offset_pre, &frameId, sizeof(frameId));
+		write_offset_pre += sizeof(frameId);
 		chunkId = 0;
 		unsigned curChunksize = 0;
 		unsigned sentBytes = 0;
 		for (unsigned i=0; i<bufferToSend_len; ){
+			write_offset = write_offset_pre;
 			//write chunkId
-			memcpy(chunkToSend+index+sizeof(frameId), &chunkId, sizeof(chunkId));
+			memcpy(chunkToSend+write_offset, &chunkId, sizeof(chunkId));
+			write_offset += sizeof(chunkId);
+			//write payloadtype
+			memcpy(chunkToSend+write_offset, &PAYLOAD_TYPE, sizeof(PAYLOAD_TYPE));
+			write_offset += sizeof(PAYLOAD_TYPE);
 			curChunksize = std::min((unsigned)(bufferToSend_len - i), CHUNK_SIZE);
-			memcpy(chunkToSend+index+sizeof(frameId)+sizeof(chunkId), bufferToSend+i, curChunksize);
+			memcpy(chunkToSend+write_offset, bufferToSend+i, curChunksize);
+			write_offset += curChunksize;
+			//static_cast<char*>(static_cast<void*>(&i));
 		#if ENABLE_SFU == 0	
-			if (sendto(clientSocket, chunkToSend, index+sizeof(frameId)+sizeof(chunkId)+curChunksize, MSG_CONFIRM, (const struct sockaddr *) &UHPAddress, sizeof(UHPAddress))<0){
+			if (sendto(clientSocket, chunkToSend, write_offset, MSG_CONFIRM, (const struct sockaddr *) &UHPAddress, sizeof(UHPAddress))<0){
 				fprintf(stderr, "send failed: %s\n", strerror(errno));}
 		#else
-			if (sendto(clientSocket, chunkToSend, sizeof(frameId)+sizeof(chunkId)+curChunksize, MSG_CONFIRM, (const struct sockaddr *) &consumerAddress, sizeof(consumerAddress))<0){
-				fprintf(stderr, "send failed: %s\n", strerror(errno));}
+			if (sendto(clientSocket, chunkToSend, write_offset, MSG_CONFIRM, (const struct sockaddr *) &consumerAddress, sizeof(consumerAddress))<0){ fprintf(stderr, "send failed: %s\n", strerror(errno));}
 		#endif
 			i+=curChunksize;
 			chunkId++;
 		#if ENABLE_SFU == 0	
-			sentBytes+=curChunksize+sizeof(frameId)+sizeof(chunkId)+index;
+			sentBytes += write_offset;
 		#else
-			sentBytes+=curChunksize+sizeof(frameId)+sizeof(chunkId);
+			sentBytes += write_offset;
+		#endif
+		#if	REGULATE_BURSTS == 0
+			//if (frameId % 2 == 0)
+				usleep(1);
 		#endif
 		}	
 		free(chunkToSend);	
@@ -244,7 +274,7 @@ void* dracoEncoderThread(void * _encoderThreadArgs) {
 	
 		uint32_t ii=0;
 		for (draco::PointIndex i(0); i < _num_points; ++i) {				
-			builder.SetAttributeValueForPoint(pos_att_id, i, _vertices[ii]);
+			builder.SetAttributeValueForPoint(pos_att_id, i, _vertices[ii]);//points.data() + 3 * i.value());
 		#if ENABLE_BnW == 1
 			#if COLOR_MODE == 0 //send RGB for each point
 			uint8_t tmprgb[3] = {_rgbs[ii*3], _rgbs[ii*3+1],_rgbs[ii*3+2]};
@@ -306,7 +336,8 @@ int main(int argc, char * argv[]) try
 
 	char recv_buffer[1500];
 	int rcv_bytes = recvfrom(clientSocket, recv_buffer, sizeof(recv_buffer), 0, (struct sockaddr *)&server_addr, &len);
-	if (rcv_bytes < 0) {  perror("Receive from UDP hole punching server failed\n");
+	if (rcv_bytes < 0) {  
+		perror("Receive from UDP hole punching server failed\n");
 		close(clientSocket);
 		return 1;
 	}
@@ -397,17 +428,13 @@ int main(int argc, char * argv[]) try
 		for (int i = 0; i < points.size(); ++i) {
 			const rs2::vertex& v = vertices[i];        // 3D point
 			const rs2::texture_coordinate& uv = tex_coords[i]; // Texture UV
-
 			// Convert normalized UV [0,1] to image coordinates
 			int x = static_cast<int>(uv.u * color_width);
 			int y = static_cast<int>(uv.v * color_height);
-
 			// Check bounds
 			if (x < 0 || x >= color_width || y < 0 || y >= color_height)
 				continue;
-
 			int idx = (y * color_width + x) * bytes_per_pixel;
-
 			RGBs[i*3] = color_data[idx];
 			RGBs[i*3+1] = color_data[idx + 1];
 			RGBs[i*3+2] = color_data[idx + 2];
@@ -436,7 +463,7 @@ int main(int argc, char * argv[]) try
 		for (int i = 0; i < NUM_OF_ENCODING_THREADS; i++) {
 			argsArray[i]= (EncoderThreadArgs*)malloc (sizeof (EncoderThreadArgs));
 			argsArray[i]->num_points = points_per_thread;
-			argsArray[i]->vertices = &vertices[points_per_thread*i];
+			argsArray[i]->vertices = &vertices[points_per_thread*i];//vertices+sizeof(rs2::vertex)*points_per_thread*i;
 		#if ENABLE_BnW == 1
 			#if COLOR_MODE == 1 //add texture
 			argsArray[i]->textures = &textures[points_per_thread*i];
@@ -521,20 +548,23 @@ int main(int argc, char * argv[]) try
 	#endif		
 	
 		free(bufferToSend);
-		
+
  		auto end = std::chrono::system_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
  
 		logText+="Interframe_ms "+ std::to_string(elapsed_seconds.count()*1000) + " ";
 		thread_safe_print("T1 Frame %d %s \n", frameId++, logText.c_str());
+		//usleep(15000);
 		
 	#if ENABLE_FEC == 0			
 		//clean memory
 		free(with_fec_array);
 	#endif
 
-	
+	#if SLOW_PACE == 0
+		usleep(1000000);
+	#endif
 	
     } /// end loop
     

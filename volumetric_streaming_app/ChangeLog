@@ -1,0 +1,18 @@
+Change log
+================
+v0.5
+================
++fixed memory leak at MCU
++fixed multiparty JPG rendering at the consumer
++cleaned code a bit, renamed files
+
+================
+v0.4
+================
++multithreaded PC rendering at consumer
++(multrithreaded) PC-to-JPG transcoding at MCU 
++JPG rendering at consumer
++multiparty SFU
++multiparty MCU
++multiparty PC rendering at consumer (via openGL)
++multiparty JPG rendering at consumer (via openGL)
