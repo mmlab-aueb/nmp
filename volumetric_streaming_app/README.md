@@ -87,7 +87,7 @@ The following parameters are available for the consumer application:
 * CHUNK_SIZE: <unsigned> The size of chunks that will be transmitted over UDP
 
 ## Output/Logs
-Details on the output or logs of the applications is available in [2].
+Details on the output or logs of the applications is available in [2] as well as in [11].
  
 ## Parsers (absolete)
 Four parsers are included in directory ./parsers. The parsers can be applied to log files like the ones available at [3]. Similar files can be created by simply directing the output of the applications to a file during application execuring (using the ">" symbol). E.g., the following command compiles and executes the consumer app sending output to file "myfile"
@@ -129,3 +129,4 @@ Some portions of the code are derived from third-party software licensed under t
 8. AFF3CT: A Fast Forward Error Correction Toolbox!, https://github.com/aff3ct/aff3ct
 9. jpg CPP library, https://www.ijg.org/files/ or https://libjpeg-turbo.org/
 10. Avid-NMP Project site, https://mmlab-aueb.github.io/avid-nmp/
+11. Avid-NMP dataset, https://zenodo.org/records/17513091
