@@ -1,6 +1,6 @@
 ## Overview
 
-The project include the CPP source code of the consumer and producer applications for the volumetric streaming application that were developed during the TENEMP project [1]. 
+The project include the CPP source code of the consumer and producer applications for the volumetric streaming application that were developed during the TENEMP [1] and Avid-NMP [10] projects. 
 
 Detailed description of the applications can be found in [2].
 
@@ -16,21 +16,29 @@ Dependencies: draco CPP library[4], glfw [5], GL [6]
 
 Command for building and executing (from the root directory):
 ```console
-$ reset && CAPP2=consumer;  g++ ${CAPP2}.CPP -o $CAPP2 -lrealsense2 -lglfw -lGL -lGLU -ldraco -lpthread  -g  && ./${CAPP2} 
+$ reset && CAPP=consumer;  g++ ${CAPP}.CPP -o $CAPP -lrealsense2 -lglfw -lGL -lGLU -ldraco -lpthread `pkg-config --cflags --libs opencv4` -g  && ./${CAPP} 
 ```
 #### producer.CPP 
-Dependencies: draco CPP library [4], intel realsense CPP library [7], jpeg [9]
+Dependencies: draco CPP library [4], intel realsense CPP library [7]
 
 Command for building and executing (from the root directory):
 ```console
-$ reset && CAPP=producer_multithreaded;  g++ ${CAPP}.CPP -o $CAPP -lrealsense2 -ldraco -ljpeg -lpthread -g  && ./${CAPP}
+$ reset && PAPP=producer_multithreaded;  g++ ${PAPP}.CPP -o $PAPP -lrealsense2 -ldraco -lpthread -g  && ./${PAPP}
+```
+#### MCUhopePunch.CPP
+Dependencies: draco CPP library [4], intel realsense CPP library [7], libturbojpeg [9]
+Command for building and executing (from the root directory):
+```console
+$ reset && MAPP=MCUhopePunch;  g++ ${MAPP}.CPP -o $MAPP -lrealsense2 -ldraco -lpthread `pkg-config --cflags --libs opencv4 libturbojpeg` -g  && ./${MAPP}
 ```
 ## Configuration parameters
+Notice that many parameters are shared by the different applications, hence need to have the same value.
 
 #### producer application parameters
 The following parameters are available for the producer application: 
-* ENABLE_HOLE_PUNCHING 1 //0 true, 1 false
-* ENABLE_SFU 1 //0 true, 1 false
+* MYSOURCEID: <uchar> The unique id of the producer (starts from 0, like a serial ID). 
+* ENABLE_HOLE_PUNCHING: <boolean> Enables the use of hole punching server (for NAT traversal); not extensively tested.
+* ENABLE_SFU: <boolean> Enables the use of SFU (or MCU).
 * ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds.
 * COLOR_MODE: <unsigned> 0 for sending RGB for each point, 1 for sending color frame and textures; the latter is still under development
 * ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
@@ -48,30 +56,43 @@ The following parameters are available for the producer application:
 * NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression
 * CHUNK_SIZE: <unsigned> The size of chunks that will be transmitted over UDP
 
-
-
 #### consumer application parameters
 The following parameters are available for the consumer application: 
-* ENABLE_HOLE_PUNCHING: <boolean> Enables the mediation of a UDP hole punching server. Feature is tested but not documented.
-* ENABLE_SFU: <boolean> Enables the mediation of a UDP hole punching server. Feature is tested but not documented.
+* ENABLE_HOLE_PUNCHING: <boolean> Enables the mediation of a UDP hole punching server. 
 * ENABLE_UI: <boolean> Enables the openGL window for rendering the 3D point clouds to the nodes screen.
-* ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds. Must be same with producer
+* ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds. Must be same with producer.
+* COLOR_MODE: <boolean> 0 for sending RGB info per point, 1 for sending color frame and textures per frame.
 * ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability. 
 * ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
 * ENABLE_FEC: <boolean> Enables FEC supported by affect library [9] -- currently under development.
 * HOLE_PUNCHING_SIGN_SRV: <String> The IPv4 address for communicating with the UDP hole punching server, the SFU or MCU.
 * HOLE_PUNCHER_PORT: <unsigned> The port for communicating with the UDP hole punching server, the SFU or MCU.
 * LISTENING_PORT: <unsigned> The port for receiving packets from the producer app.
-* NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression. Must be same with consumer app
+* NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression. Must be same with consumer app.
+* WRITE_JPG_TO_FILE: <boolean> For debugging purposes, writes each transcoded frame to a JPG file in the disk (in current directory).
 
+#### SFU/MCU application parameters
+The following parameters are available for the consumer application: 
+* ENABLE_BnW: <boolean> Disables color rendering; ignores colour information of point clouds. Must be same with producer.
+* ENABLE_FRAME_HASHING: <boolean> Enables estimating the hash values of received point clouds for estimated (post-experiment) reliability.
+* CONVERT_T0_2D: <unsigned> Enables the transcoding from point cloud to JPG.  
+* ENABLE_DETAILED_TIMING: <boolean> Enables logging the time of individual operations during packet and point cloud processing.
+* ENABLE_FEC: <boolean> Enables FEC supported by affect library [9] -- currently under development.
+* HOLE_PUNCHING_SIGN_SRV: <String> The IPv4 address for communicating with the UDP hole punching server, the SFU or MCU.
+* HOLE_PUNCHER_PORT: <unsigned> The port for communicating with the UDP hole punching server, the SFU or MCU.
+* LISTENING_PORT: <unsigned> The port for receiving packets from the producer app.
+* NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression. Must be same with consumer app.
+* NUM_OF_STREAMS: <unsigned> the number of received producer streams.
+* NUM_OF_ENCODING_THREADS: <unsigned> the number of threads used during compression
+* CHUNK_SIZE: <unsigned> The size of chunks that will be transmitted over UDP
 
 ## Output/Logs
 Details on the output or logs of the applications is available in [2].
  
-## Parsers
+## Parsers (may require modifications for latest versions)
 Four parsers are included in directory ./parsers. The parsers can be applied to log files like the ones available at [3]. Similar files can be created by simply directing the output of the applications to a file during application execuring (using the ">" symbol). E.g., the following command compiles and executes the consumer app sending output to file "myfile"
 ```console
-$ reset && CAPP2=consumer;  g++ ${CAPP2}.CPP -o $CAPP2 -lglfw -lGL -lGLU -ldraco  -g  && ./${CAPP2} > myfile 
+$ reset && CAPP=consumer;  g++ ${CAPP}.CPP -o $CAPP -lglfw -lGL -lGLU -ldraco  -g  && ./${CAPP} > myfile 
 ```
 The parsers assume that consumer and producer logfiles for the same execution have the same timestamp in their filename.
 
@@ -106,4 +127,5 @@ Some portions of the code are derived from third-party software licensed under t
 6. openGL, http://www.opengl.org/
 7. Intel realsense SDK, https://github.com/IntelRealSense/librealsense
 8. AFF3CT: A Fast Forward Error Correction Toolbox!, https://github.com/aff3ct/aff3ct
-0. jpg CPP library, https://www.ijg.org/files/
+9. jpg CPP library, https://www.ijg.org/files/ or https://libjpeg-turbo.org/
+10. Avid-NMP Project site, https://mmlab-aueb.github.io/avid-nmp/
