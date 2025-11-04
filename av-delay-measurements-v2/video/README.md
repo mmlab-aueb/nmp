@@ -1,5 +1,4 @@
-### C++ code for video streaming using openCV library in Ubuntu Linux
-## UDP Audio Streaming with ALSA (C++ / Linux)
+## UDP Video Streaming with ALSA (C++ / Linux)
 
 This folder contains minimal C++ examples for **sending** and **receiving** jpeg frames over **UDP** using the **openCV** library on Ubuntu/Linux.
 Both applications should run on the same LAN with known IP's.
@@ -10,9 +9,9 @@ Each app uses threads for capturing frames and networking.
 ### Directory Structure
 
 ```
-audio/
-├── udp_audio_sender_threaded.cpp
-├── udp_audio_receiver_threaded.cpp
+video/
+├── open-camera-receive-udp-threaded.cpp
+├── open-camera-send-udp-threaded.cpp
 └── README.md
 ```
 
