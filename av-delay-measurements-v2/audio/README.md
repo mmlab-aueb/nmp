@@ -69,26 +69,13 @@ Replace `192.168.1.50` with the receiver’s IP.
 
 ---
 
-## Options (if supported)
-
-| Flag | Description |
-|------|------------|
-| `--device hw:0,0` | ALSA device |
-| `--rate 48000` | Sample rate |
-| `--channels 1` | Mono (2 = stereo) |
-| `--frames 1024` | ALSA buffer frames |
-| `--host <IP>` | Destination IP (sender) |
-| `--port <N>` | UDP port |
-
----
-
 ## Troubleshooting
 
 | Issue | Solution |
 |------|---------|
-Choppy audio | Increase `--frames` |
-XRUN errors | Larger buffer or lower sample rate |
+Choppy audio | Increase BUFFER_CAPACITY  |
+XRUN errors | Larger buffer |
 Silence | Ensure same rate/channels on both sides |
-NAT issues | Port forward or run on LAN |
+
 
 
