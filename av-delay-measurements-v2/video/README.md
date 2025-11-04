@@ -23,7 +23,9 @@ Install build tools & ALSA dev libraries:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y build-essential libasound2-dev alsa-utils
+sudo apt-get install -y build-essential pkg-config libopencv-dev
+# optional: tools
+sudo apt-get install -y v4l-utils ffmpeg
 ```
 
 ---
@@ -33,17 +35,15 @@ sudo apt-get install -y build-essential libasound2-dev alsa-utils
 #### Sender
 
 ```bash
-g++ -std=c++17 -O2 udp_audio_sender_threaded.cpp \
-  -o udp_audio_sender_threaded \
-  -lasound -lpthread
+g++ -std=c++11 -pthread -o open-camera-send-udp-threaded open-camera-send-udp-threaded.cpp \
+     $(pkg-config --cflags --libs opencv4)
 ```
 
 #### Receiver
 
 ```bash
-g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
-  -o udp_audio_receiver_threaded \
-  -lasound -lpthread
+g++ -std=c++11 -pthread -o open-camera-receive-udp-threaded-new \
+        open-camera-receive-udp-threaded-new.cpp $(pkg-config --cflags --libs opencv4)
 ```
 
 ---
