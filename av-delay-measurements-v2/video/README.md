@@ -53,26 +53,19 @@ g++ -std=c++11 -pthread -o open-camera-receive-udp-threaded-new \
 #### Receiver must run on a Ubuntu machine with known IP ( example: 192.168.1.50 listens on port 5000)
 
 ```bash
-./udp_audio_receiver_threaded
+./open-camera-receive-udp-threaded
 ```
 
 #### Sender must run on a Ubuntu machine with known IP (send to receiver_IP port)
 
 ```bash
-./udp_audio_sender_threaded  192.168.1.50  5000
+./open-camera-send-udp-threaded 192.168.1.50  5000
 ```
 
 Replace `192.168.1.50` with the receiver’s IP.
 
----
 
-### Troubleshooting
 
-| Issue | Solution |
-|------|---------|
-Choppy audio | Increase BUFFER_CAPACITY  |
-XRUN errors | Larger buffer |
-Silence | Ensure same rate/channels on both sides |
 
 
 
