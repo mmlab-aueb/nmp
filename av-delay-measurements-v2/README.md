@@ -1,2 +1,3 @@
 ### C++ Code for audio and video streaming in Linux
-'''ergswrgsrthsrt'''
+This directory contains code in c++ for audio and video streaming in LAN conditions with known IP's.
+
