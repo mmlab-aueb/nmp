@@ -4,9 +4,6 @@ This folder contains minimal C++ examples for **sending** and **receiving** raw 
 Both applications should run on the same LAN with known IP's.
 Each app uses threads for audio I/O (ALSA) and networking.
 
-
-> These examples stream **unencrypted raw audio** and are meant for research/experimentation on trusted networks.
-
 ---
 
 ### Directory Structure
