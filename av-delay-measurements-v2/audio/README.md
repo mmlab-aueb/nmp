@@ -1,7 +1,9 @@
 # UDP Audio Streaming with ALSA (C++ / Linux)
 
-This folder contains minimal C++ examples for **sending** and **receiving** raw PCM audio over **UDP** using the **ALSA** library on Ubuntu/Linux.  
+This folder contains minimal C++ examples for **sending** and **receiving** raw PCM audio over **UDP** using the **ALSA** library on Ubuntu/Linux.
+Both applications should run on the same LAN with known IP's.
 Each app uses threads for audio I/O (ALSA) and networking.
+
 
 > These examples stream **unencrypted raw audio** and are meant for research/experimentation on trusted networks.
 
@@ -51,13 +53,13 @@ g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
 
 ## Run
 
-### Receiver (listens on port 5000)
+### Receiver must run on a Ubuntu machine with known IP ( example: 192.168.1.50 listens on port 5000)
 
 ```bash
 ./udp_audio_receiver_threaded
 ```
 
-### Sender (send to receiver IP)
+### Sender must run on a Ubuntu machine with known IP (send to receiver IP)
 
 ```bash
 ./udp_audio_sender_threaded  192.168.1.50  5000
