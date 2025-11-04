@@ -54,13 +54,13 @@ g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
 ### Receiver (listens on port 5000)
 
 ```bash
-./udp_audio_receiver_threaded --port 5000
+./udp_audio_receiver_threaded
 ```
 
 ### Sender (send to receiver IP)
 
 ```bash
-./udp_audio_sender_threaded --host 192.168.1.50 --port 5000
+./udp_audio_sender_threaded  192.168.1.50  5000
 ```
 
 Replace `192.168.1.50` with the receiver’s IP.
@@ -80,23 +80,6 @@ Replace `192.168.1.50` with the receiver’s IP.
 
 ---
 
-## Useful Commands
-
-List ALSA devices:
-
-```bash
-arecord -l
-aplay -l
-```
-
-Allow UDP port:
-
-```bash
-sudo ufw allow 5000/udp
-```
-
----
-
 ## Troubleshooting
 
 | Issue | Solution |
@@ -106,15 +89,4 @@ XRUN errors | Larger buffer or lower sample rate |
 Silence | Ensure same rate/channels on both sides |
 NAT issues | Port forward or run on LAN |
 
----
 
-## Security Note
-
-Raw UDP audio — no encryption/auth.  
-Use VPN/SSH tunnel for secure use.
-
----
-
-## License
-
-MIT
