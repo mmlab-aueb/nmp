@@ -4,6 +4,10 @@ This 3 x 3 relay server must run in a LAN with known IP's.
 
 It receives UDP packets in 3 UDP ports (given as arguments) and sends these packets to 3 given IP's and corresponding ports. 
 
+It can be used both for audio and video.
+
+It assumes that there are 2 or 3 clients in the same LAN with the IP's 10.0.0.X which want to send and receive audio and video between them.
+
 ### Build
 
 ```bash
