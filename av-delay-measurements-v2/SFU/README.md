@@ -3,3 +3,11 @@
 This 3 x 3 relay server must run in a LAN with known IP's. 
 
 It receives UDP packets in 3 UDP ports (given as arguments) and sends these packets to 3 given IP's and corresponding ports. 
+
+### Build
+
+#### SFU
+
+```bash
+g++ -O2 -std=c++17 3-to-3-udp-relay-server.cpp -o 3-to-3-udp-relay-server
+```
