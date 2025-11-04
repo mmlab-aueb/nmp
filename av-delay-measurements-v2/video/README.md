@@ -1,4 +1,4 @@
-## UDP Video Streaming with ALSA (C++ / Linux)
+## UDP Video Streaming with OpenCV (C++ / Linux)
 
 This folder contains minimal C++ examples for **sending** and **receiving** jpeg frames over **UDP** using the **openCV** library on Ubuntu/Linux.
 Both applications should run on the same LAN with known IP's.
