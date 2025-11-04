@@ -1,7 +1,11 @@
 ## UDP Audio Streaming with ALSA (C++ / Linux)
 
 This folder contains minimal C++ examples for **sending** and **receiving** raw PCM audio over **UDP** using the **ALSA** library on Ubuntu/Linux.
+
 Both applications should run on the same LAN with known IP's.
+
+They can run both in peer-to-peer mode and as Client - SFU using the SFU application.
+
 Each app uses threads for audio I/O (ALSA) and networking.
 
 ---
