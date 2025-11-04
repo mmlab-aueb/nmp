@@ -56,7 +56,7 @@ g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
 ./udp_audio_receiver_threaded
 ```
 
-#### Sender must run on a Ubuntu machine with known IP (send to receiver IP)
+#### Sender must run on a Ubuntu machine with known IP (send to receiver_IP port)
 
 ```bash
 ./udp_audio_sender_threaded  192.168.1.50  5000
