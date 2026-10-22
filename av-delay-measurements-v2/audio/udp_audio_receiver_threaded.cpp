@@ -13,7 +13,7 @@
 
 /* ────────── macros (same names/values as the C original) ─────────── */
 #define LISTEN_PORT      5000
-#define SAMPLE_RATE      44100
+#define SAMPLE_RATE      48000
 #define CHANNELS         1
 #define FORMAT           SND_PCM_FORMAT_S16_LE
 #define FRAME_SIZE       2
