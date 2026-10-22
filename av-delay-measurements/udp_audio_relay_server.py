@@ -23,7 +23,7 @@ def start_server():
     server_recv3.bind(("0.0.0.0", PORT_CLIENT2))
     server_recv4.bind(("0.0.0.0", PORT_SEND2))
 
-    print(f"🌍 [SERVER] Listening on ports {PORT_CLIENT1} , {PORT_CLIENT2},{PORT_SEND1} , {PORT_SEND2} for incoming RTP audio.")
+    print(f"[SERVER] Listening on ports {PORT_CLIENT1} , {PORT_CLIENT2},{PORT_SEND1} , {PORT_SEND2} for incoming RTP audio.")
 
     # Receive client "Hello" messages to establish NAT mapping
     data1, addr1 = server_recv1.recvfrom(1024)
@@ -39,11 +39,11 @@ def start_server():
     client2_ip, client2_port_1 = addr3
     client2_ip, client2_port_2 = addr4
 
-    print(f"✅ [CLIENT1 DETECTED] {client1_ip}:{client1_port_1}")
-    print(f"✅ [CLIENT1 DETECTED] {client1_ip}:{client1_port_2}")
+    print(f"[CLIENT1 DETECTED] {client1_ip}:{client1_port_1}")
+    print(f"[CLIENT1 DETECTED] {client1_ip}:{client1_port_2}")
 
-    print(f"✅ [CLIENT1 DETECTED] {client2_ip}:{client2_port_1}")
-    print(f"✅ [CLIENT2 DETECTED] {client2_ip}:{client2_port_2}")
+    print(f"[CLIENT1 DETECTED] {client2_ip}:{client2_port_1}")
+    print(f"[CLIENT2 DETECTED] {client2_ip}:{client2_port_2}")
 
     # Send public IP & port mappings back to clients
     server_recv1.sendto(f"{client1_ip}:{client1_port_1}".encode(), addr1)
@@ -53,26 +53,26 @@ def start_server():
     server_recv4.sendto(f"{client2_ip}:{client2_port_2}".encode(), addr4)
 
     # Send empty packets to keep NAT traversal open
-    print("🚀 [KEEP-ALIVE] Sending empty packets to maintain NAT traversal...")
+    print("[KEEP-ALIVE] Sending empty packets to maintain NAT traversal...")
     for _ in range(EMPTY_PACKET_COUNT):
         server_recv1.sendto(b"", addr1)
-        print(f"📤 [SENT] Empty UDP packet to {addr1}")
+        print(f"[SENT] Empty UDP packet to {addr1}")
         server_recv2.sendto(b"", addr2)
-        print(f"📤 [SENT] Empty UDP packet to {addr2}")
+        print(f"[SENT] Empty UDP packet to {addr2}")
         server_recv3.sendto(b"", addr3)
-        print(f"📤 [SENT] Empty UDP packet to {addr3}")
+        print(f"[SENT] Empty UDP packet to {addr3}")
         server_recv4.sendto(b"", addr4)
-        print(f"📤 [SENT] Empty UDP packet to {addr4}")
+        print(f"[SENT] Empty UDP packet to {addr4}")
         time.sleep(1)
 
 
-    print("🧹 [CLEANUP] Closing NAT punching sockets so GStreamer can bind")
+    print("[CLEANUP] Closing NAT punching sockets so GStreamer can bind")
     server_recv2.close()
     server_recv4.close()
     time.sleep(2)
     # Start relaying Client1 → Client2 and Client2 → Client1
-    print(f"🔄 [RELAY] Forwarding Client1 ({client1_ip}:{client1_port_1}) → Client2 ({client2_ip}:{client2_port_1})")
-    print(f"🔄 [RELAY] Forwarding Client2 ({client2_ip}:{client2_port_1}) → Client1 ({client1_ip}:{client1_port_2})")
+    print(f"[RELAY] Forwarding Client1 ({client1_ip}:{client1_port_1}) → Client2 ({client2_ip}:{client2_port_1})")
+    print(f"[RELAY] Forwarding Client2 ({client2_ip}:{client2_port_1}) → Client1 ({client1_ip}:{client1_port_2})")
 
 
     '''
@@ -115,7 +115,7 @@ def start_server():
         "queue", "!", "multiudpsink", f"clients={client2_ip}:{client2_port_2}", "bind-port=20001"
     ]
     subprocess.Popen(" ".join(relay_gst_command2), shell=True)
-    print(f"🎵 [STREAMING] Audio relay active between Client1 & Client2 via the server!")
+    print(f"[STREAMING] Audio relay active between Client1 & Client2 via the server!")
 
 
     
