@@ -53,8 +53,8 @@ def start_p2p_client(server_ip, local_port, peer_number):
         recv_command = [
             "gst-launch-1.0", "-v", "udpsrc", f"port={local_port}",
             "caps=application/x-rtp,media=audio,clock-rate=48000,encoding-name=L16,channels=1", "!",
-            "rtpL16depay", "!", "audioconvert", "!", "audioresample", "!",
-            "queue", "max-size-time=1000000", "!", "pulsesink", "latency-time=1000", "buffer-time=2000", "sync=false"
+            "rtpL16depay", "!", 
+            "pulsesink", "latency-time=2000", "buffer-time=2000", "sync=false"
         ]
         subprocess.Popen(" ".join(recv_command), shell=True)
 
