@@ -12,7 +12,7 @@
 #include <alsa/asoundlib.h>
 
 // ====================== constants ===================================
-#define SAMPLE_RATE       44100
+#define SAMPLE_RATE       48000
 #define CHANNELS          1
 #define FORMAT            SND_PCM_FORMAT_S16_LE
 #define FRAME_SIZE        2
