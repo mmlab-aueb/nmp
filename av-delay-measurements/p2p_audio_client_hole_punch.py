@@ -41,8 +41,8 @@ def start_p2p_client(server_ip, local_port, peer_number):
         print("🎵 [STREAMING] Client 1 sending audio to Client 2 via multiudpsink from port 5000")
         send_gst_command = [
             "gst-launch-1.0", "-v",
-            "pulsesrc", "latency-time=1000", "buffer-time=2000", "!",
-            "audioconvert", "!", "audioresample", "!", "rtpL16pay", "!",
+            "pulsesrc", "latency-time=2000", "buffer-time=2000", "!",
+            "rtpL16pay", "!",
             "application/x-rtp,media=audio,clock-rate=48000,encoding-name=L16,channels=1", "!",
             "multiudpsink", f"clients={peer_ip}:{peer_port}", "bind-port=5000"
 
