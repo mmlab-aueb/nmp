@@ -40,11 +40,12 @@ def start_p2p_client(server_ip, local_port, peer_number):
     if peer_number == 1:
         print("🎵 [STREAMING] Client 1 sending audio to Client 2 via multiudpsink from port 5000")
         send_gst_command = [
-            "gst-launch-1.0", "v4l2src", "!", "videoconvert", "!",
-            "vp8enc", "deadline=1", "!",  # fast encoding
-            "rtpvp8pay", "!",
-            "application/x-rtp,media=video,encoding-name=VP8,payload=96", "!",
-            "multiudpsink", f"clients={peer_ip}:{peer_port}", "bind-port=5000"
+            "gst-launch-1.0", "v4l2src", "device=/dev/video2", 
+            "!", "videoconvert", "!", "video/x-raw,format=I420",
+            "!", "x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast", 
+            "!", "rtph264pay",
+            "!", "application/x-rtp,media=video,encoding-name=H264,payload=96",
+            "!", "udpsink", f"host={server_ip}", f"port={PORT_SEND}"
         ]
         subprocess.Popen(" ".join(send_gst_command), shell=True)
     else:
