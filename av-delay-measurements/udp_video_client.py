@@ -104,17 +104,7 @@ def start_client(server_ip, client_number):
     client_receive.close()
     print("✅ [NAT CONFIRMED] Empty packets received. NAT hole is open!")
    
-    #send_gst_command = [
-    #    "gst-launch-1.0", "v4l2src", "!", "videoconvert",  "!", "video/x-raw, width=320, height=240, framerate=30/1", "!",
-    #    "vp8enc", "deadline=1", "!",  # fast encoding
-    #    "rtpvp8pay", "!",
-    #    "application/x-rtp,media=video,encoding-name=VP8,payload=96", "!",
-    #    "udpsink", f"host={server_ip}", f"port={PORT_SEND}"
-    #]
-    #gst-launch-1.0 v4l2src ! videoconvert ! video/x-raw,format=I420 
-    #! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! 
-    #rtph264pay config-interval=1 pt=96 ! udpsink host=127.0.0.1 port=5000
- 
+
     send_gst_command = [
         "gst-launch-1.0", "v4l2src", "device=/dev/video0", 
         "!", "videoconvert", "!", "video/x-raw,width=320,height=240,format=I420",  # x264enc needs I420
@@ -131,15 +121,7 @@ def start_client(server_ip, client_number):
 
     print(f"🎧 [LISTENING] Receiving relayed RTP audio on {local_rcv_port}...")
 
-    #receive_gst_command = [
-    #    "gst-launch-1.0", "udpsrc", f"port={local_rcv_port}",
-    #    "caps=application/x-rtp,media=video,encoding-name=VP8,payload=96", "!",
-    #    "rtpvp8depay", "!", "vp8dec", "!", "videoconvert", "!",
-    #    "queue", "!", "autovideosink", "sync=false"
-    #]
-    
-    #gst-launch-1.0 udpsrc port=5000 caps="application/x-rtp,media=video,encoding-name=H264,payload=96" 
-    #! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+
 
     receive_gst_command = [
         "gst-launch-1.0", "udpsrc", f"port={local_rcv_port}",
