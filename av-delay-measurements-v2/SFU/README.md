@@ -1,4 +1,4 @@
-### A simple custom SFU implementation for simple UDP packet relay
+### A rendezvous server and a simple custom SFU implementation for simple UDP packet relay
 
 - server_for_p2p_connection.c:  It operates as a rendezvous server and must run in a Ubuntu machine with public IP. Two client applications behind NATs can exchange public IPs and ports so to establish bidirectional audio or video streaming.
 - Build
