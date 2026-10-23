@@ -12,10 +12,4 @@ gcc udp_relay_server.c -o udp_relay_server
 ```
 
 
-### Build
-
-```bash
-g++ -O2 -std=c++17 3-to-3-udp-relay-server.cpp -o 3-to-3-udp-relay-server
-```
-
 
