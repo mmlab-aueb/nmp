@@ -54,7 +54,7 @@ g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
 
 ---
 
-#### Run
+#### Run in LAN conditions
 
 #### Receiver must run on a Ubuntu machine with known IP ( example: 192.168.1.50 listens on port 5000)
 
