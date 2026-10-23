@@ -99,7 +99,7 @@ def start_client(server_ip, client_number):
 
     send_gst_command = [
         "gst-launch-1.0", "v4l2src", "device=/dev/video0", 
-        "!", "videoconvert", "!", "video/x-raw,format=I420",  # x264enc needs I420
+        "!", "videoconvert", "!", "video/x-raw,format=I420",  
         "!", "x264enc" ,  "tune=zerolatency", "bitrate=500", "speed-preset=ultrafast", 
         "!", "rtph264pay",
         "!", "application/x-rtp,media=video,encoding-name=H264,payload=96",
