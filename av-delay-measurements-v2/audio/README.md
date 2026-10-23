@@ -54,7 +54,7 @@ g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
 
 ---
 
-#### Run in LAN conditions
+### Run in LAN conditions
 
 #### Receiver must run on a Ubuntu machine with known IP ( example: 192.168.1.50 listens on port 5000)
 
@@ -69,6 +69,19 @@ g++ -std=c++17 -O2 udp_audio_receiver_threaded.cpp \
 ```
 
 Replace `192.168.1.50` with the receiver’s IP.
+
+---
+### Run with two endpoints behind NATs 
+
+#### Build the client application
+```bash
+g++ -std=c++17 -pthread udp_p2p_audio_client_threaded.cpp -o udp_p2p_audio_client_threaded_cpp -lasound
+```
+####  1. Run the server_for_p2p_connection (in the SFU folder) in a Ubuntu machine with public IP
+####  2. Run the client application on each of the two Ubuntu machines that sit behind NATs.
+```bash
+./udp_p2p_audio_client_threaded_cpp  ServerIP 
+```
 
 ---
 
