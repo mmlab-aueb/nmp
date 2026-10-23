@@ -1,7 +1,5 @@
-// === server.c ===
-// gcc udp_p2p_server.c -o udp_p2p_server
-// === udp_p2p_server.c ===
-// Compile: gcc udp_p2p_server.c -o udp_p2p_server
+// === server_for_p2p_connection.c ===
+// Compile: gcc server_for_p2p_connection.c -o server_for_p2p_connection
 
 #include <stdio.h>
 #include <stdlib.h>
